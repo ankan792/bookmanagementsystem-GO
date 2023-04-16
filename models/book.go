@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/ankan792/bookmanagementsystem-GO/config"
 	"github.com/jinzhu/gorm"
 )
@@ -48,6 +50,12 @@ func Update(b *Book) {
 	db.Save(&b)
 }
 
-func DeleteByID(id int) {
-	db.Delete(&Book{}, id)
+func DeleteByID(id int) error {
+	result := db.Delete(&Book{}, id)
+	if result.Error != nil {
+		return result.Error
+	} else if db.RowsAffected < 1 {
+		return errors.New("row cannot be deleted because it doesn't exist")
+	}
+	return nil
 }

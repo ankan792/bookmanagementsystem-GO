@@ -96,6 +96,11 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error converting string to int")
 	}
-	models.DeleteByID(bookID)
+	err = models.DeleteByID(bookID)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 	GetBooks(w, r)
 }
